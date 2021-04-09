@@ -8,10 +8,18 @@ To enable native extensions to pass the memory allocated by a native SYCL librar
 * `shape`: tuple of integers
 * `typestr`: string
 * `typedescr`: a list of tuples 
-* `data`: (int, bool)
+* `data`: (int, bool)  
+     - `data[0]` is to be understood as `static_cast<size_t>(usm_ptr)`
+     - `data[1]` is a boolean value indicating whether the array is read-only, or not. 
 * `strides`: tuple
 * `offset`: int
 * `version`: int
-* `syclobj`: `dpctl.SyclQueue` or `dpctl.SyclContext` object
+* `syclobj`: A Python object indicating context to which USM pointer is bound
+     - filter selector string: default context for this root device is used
+     - `dpctl.SyclContext`: explicitly given context
+     - named Python capsule with name "SyclContextRef" that carries pointer to `sycl::context` to use
+     - `dpctl.SyclQueue`  : use context stored in the queue
+     - named Python capsule with name "SyclQueueRef" that carries pointer to `sycl::queue` from which to use the context
+     - Any Python object with method `_get_capsule()` that produces a named Python capsule as described above.
 
 The dictionary keys align with those of [``numpy.ndarray.__array_interface__``](https://numpy.org/doc/stable/reference/arrays.interface.html) and [``__cuda_array_interface__``](http://numba.pydata.org/numba-doc/latest/cuda/cuda_array_interface.html). For host accessible USM pointers, the object may also implement CPython [PEP-3118](https://www.python.org/dev/peps/pep-3118/) compliant buffer interface which will be used if a `data` key is not present in the dictionary. Use of a buffer interface extends the interoperability to other Python objects, such as `bytes`, `bytearray`, `array.array`, or `memoryview`. The type of the USM pointer stored in the object can be queried using methods of the `dpctl`.
