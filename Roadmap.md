@@ -13,7 +13,7 @@
 ### Stretch goal
 
 1. Implement redesigned `SyclEvent` and ``cl::sycl::event`` interface: [#391](http://github.com/IntelPython/dpctl/issues/391)
-1. Enable asynchronous queue operations (memcpy, etc.)
+1. Enable asynchronous queue operations (memcpy, etc.) (#84)
 1. Design/explore asynchronous operations on `usm_ndarray`.
 1. Build example of use `dpctl` from Pybind11
 
